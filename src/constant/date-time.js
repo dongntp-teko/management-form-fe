@@ -1,0 +1,17 @@
+// Created by thanhpd on 6/17/2019
+
+const DATE_FORMAT = 'DD/MM/YYYY';
+const TIME_FORMAT = 'HH:mm:ss';
+const TIME_WITHOUT_SECOND = 'HH:mm';
+const DATE_TIME_FORMAT = 'DD/MM/YYYY HH:mm:ss';
+const HOUR_MINUTE_FORMAT = 'HH:mm';
+const DATE_HOUR_MINUTE_FORMAT = 'DD/MM/YYYY HH:mm';
+
+export default {
+  DATE_FORMAT,
+  TIME_FORMAT,
+  TIME_WITHOUT_SECOND,
+  DATE_TIME_FORMAT,
+  HOUR_MINUTE_FORMAT,
+  DATE_HOUR_MINUTE_FORMAT,
+}

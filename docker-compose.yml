@@ -1,0 +1,10 @@
+version: '3.5'
+
+services:
+  ppm_app:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+    restart: always
+    environment:
+      CHOKIDAR_USEPOLLING: 'true'

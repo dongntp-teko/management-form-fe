@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test DefaultHeader component should render correctly 1`] = `
+<button
+  class="d-lg-none navbar-toggler"
+  data-sidebar-toggler="true"
+  type="button"
+>
+  <span
+    class="navbar-toggler-icon"
+  />
+</button>
+`;

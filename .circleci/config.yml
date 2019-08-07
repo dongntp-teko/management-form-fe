@@ -1,0 +1,38 @@
+version: 2
+
+jobs:
+  test:
+    docker:
+      - image: node:10
+        environment:
+          YARN_CACHE_FOLDER: ~/.yarn
+          CC_TEST_REPORTER_ID: bb10f7a45a48390ebe173755308e7878c21890460516a6e404332364ed2270e1
+    steps:
+      - checkout
+      - restore_cache:
+          key: yarn-{{checksum "package.json"}}
+      - run: |
+          yarn install
+          yarn global add nyc
+      - save_cache:
+          key: yarn-{{checksum "package.json"}}
+          paths:
+            - ~/.yarn
+      - run:
+          name: Install Code Climate reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 -o ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+
+      - run:
+          name: Run tests
+          command: |
+            ./cc-test-reporter before-build
+            nyc --reporter=clover yarn test:cov --runInBand
+            ./cc-test-reporter after-build --exit-code $?
+
+workflows:
+  version: 2
+  everything:
+    jobs:
+      - test

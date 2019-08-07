@@ -1,0 +1,105 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';
+// Icon
+@import '~font-awesome/css/font-awesome.min.css';
+@import '~simple-line-icons/css/simple-line-icons.css';
+// Ant Design
+@import '~antd/dist/antd.min.css';
+
+@import '~react-select/dist/react-select.css';
+@import '~react-virtualized-select/styles.css';
+
+
+// fix bug PP-35, PP-41
+.Select-multi-value-wrapper {
+  width: 100% !important;
+}
+
+.Select-input {
+  width: 95% !important;
+}
+
+.Select-input > input {
+  width: 100% !important;
+}
+
+// Custom styles
+.logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
+}
+
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.radio-group-block {
+  display: block;
+}
+
+// price ghost button
+.button-no-border {
+  border: none;
+}
+
+// @media (min-width: 992px)
+.header-fixed .app-header {
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+}
+
+.sidebar-fixed .sidebar {
+  z-index: 1000;
+}
+
+//scroll bar
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #bbb;
+}
+
+.breadcrumb-item + .breadcrumb-item {
+  padding-left: 0.35rem;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  padding-right: 0.35rem;
+}
+
+/* Fix header border */
+.app-header {
+  border-bottom: none;
+}
+
+.header-divider {
+  z-index: 1;
+  position: fixed;
+  width: 100%;
+  height: 1px;
+  background: #c8ced3;
+}
+
+.white-space-nowrap {
+  white-space: nowrap;
+}
