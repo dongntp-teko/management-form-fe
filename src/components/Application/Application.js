@@ -1,53 +1,50 @@
 // Created by thanhpd on 6/17/2019
 // @flow
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'reactn';
 
-import { Table, Divider, Icon, Card, Button, Input } from 'antd'
+import { Table, Divider, Icon, Card, Button, Input } from 'antd';
 
-import axios from 'axios'
-import Create from '../Create/Create'
-import Update from '../Update/Update'
-import Delete from '../Delete/Delete'
+import axios from 'axios';
+import Create from '../Create/Create';
+import Update from '../Update/Update';
+import Delete from '../Delete/Delete';
 
-export default (props) => {
+export default (props: Object) => {
   axios.defaults.baseURL = 'http://0.0.0.0:5000/api/';
-  const [apps, setApps] = useState([]);
+  const [apps, setApps] = useState([{}]);
   const [visible, setVisible] = useState(false);
   const [stt, setStt] = useState({
-    action: "",
-    appId: "",
-  })
+    action: '',
+    appId: '',
+  });
 
-
-  const searchName = async (value) => {
-    const respone = await axios.post('application/search', {app_name: value})
-    const {data} = respone
-    setApps(data)
-  }
-
+  const searchName = async value => {
+    const respone = await axios.post('application/search', { app_name: value });
+    const { data } = respone;
+    setApps(data.data);
+  };
 
   useEffect(() => {
     axios
       .get('application/get')
       .then(res => {
         console.log(res.data);
-        setApps(res.data);
+        setApps(res.data.data);
       })
       .catch(err => {
         console.log(err);
       });
   }, []);
 
-
   const openModal = (value, id) => {
     setVisible(true);
-    setStt({action: value, appId: id})
+    setStt({ action: value, appId: id });
   };
 
   const closeModal = () => {
     setVisible(false);
-    setStt({action: "", appId: ""})
-    props.history.push('/app')
+    setStt({ action: '', appId: '' });
+    props.history.push('/app');
   };
 
   const columns = [
@@ -57,15 +54,14 @@ export default (props) => {
     },
     {
       title: 'Group',
-      dataIndex: 'group_id',
-      
+      dataIndex: 'group_name',
     },
     {
-      title: "Name",
+      title: 'Name',
       dataIndex: 'app_name',
     },
     {
-      title: 'Main',
+      title: 'Main Uri',
       dataIndex: 'main_uri',
     },
     {
@@ -107,14 +103,23 @@ export default (props) => {
         ),
     },
     {
-      title: "",
+      title: '',
       render: (text, record) => {
-      
         return (
           <div>
-            <Button type="link" onClick={() => openModal('update', record.app_id )}>Update</Button>
+            <Button
+              type="link"
+              onClick={() => openModal('update', record.app_id)}
+            >
+              Update
+            </Button>
             <Divider type="vertical" />
-            <Button type="link" onClick={() => openModal('delete', record.app_id)}>Delete</Button>
+            <Button
+              type="link"
+              onClick={() => openModal('delete', record.app_id)}
+            >
+              Delete
+            </Button>
           </div>
         );
       },
@@ -123,29 +128,36 @@ export default (props) => {
 
   return (
     <div>
-      
       <div>
         <h1>Dashboard</h1>
         <div className="mb10 flex-space-between">
-          <Input.Search placeholder="Search name" onSearch={value => searchName(value)} style={{width: 200}} />
-          <Button type="primary" onClick={() => openModal("create")}>
+          <Input.Search
+            placeholder="Search name"
+            onSearch={value => searchName(value)}
+            style={{ width: 200 }}
+          />
+          <Button type="primary" onClick={() => openModal('create')}>
             <Icon type="plus" /> Create new app
           </Button>
         </div>
 
-        {stt.action === "create" && <Create visible={visible} closeModal={closeModal} />}
-        {stt.action === "update" && <Update visible={visible} closeModal={closeModal} appId={stt.appId} />}
-        {stt.action === "delete" && <Delete visible={visible} closeModal={closeModal} appId={stt.appId} />}
+        {stt.action === 'create' && (
+          <Create visible={visible} closeModal={closeModal} />
+        )}
+        {stt.action === 'update' && (
+          <Update visible={visible} closeModal={closeModal} appId={stt.appId} />
+        )}
+        {stt.action === 'delete' && (
+          <Delete visible={visible} closeModal={closeModal} appId={stt.appId} />
+        )}
       </div>
       <Card>
-        {apps ? (
-          <Table
-            dataSource={apps.filter(app => app.activeness)}
-            columns={columns}
-          />
-        ) : (
-          <Table columns={columns} />
-        )}
+        <Table
+          id="table_app"
+          rowKey="app_id"
+          dataSource={apps.filter(app => app.activeness)}
+          columns={columns}
+        />
       </Card>
     </div>
   );

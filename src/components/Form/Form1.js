@@ -3,24 +3,34 @@ import { Select } from 'antd';
 import axios from 'axios';
 import CheckBox from './CheckBox';
 
+const timezone = "UTC"
+const list = ['-12', '-11', '-10', '-9','-8','-7','-6','-5','-4','-3','-2','-1','+0','+1','+2','+3','+4','+5','+6','+7','+8','+9','+10','+11']
+
+const timezoneList = list.map( item => timezone+item)
+
+
+
 const Form1 = props => {
   const { Option } = Select;
 
-  const [apps, setApps] = useState([]);
+  // console.log(getTimezone)
 
-  console.log(props.values);
+  console.log(props);
+
+  const [apps, setApps] = useState([]);
 
   useEffect(() => {
     axios
       .get('/app_group/get')
       .then(res => {
         console.log(res.data);
-        setApps(res.data);
+        setApps(res.data.data);
       })
       .catch(err => {
         console.log(err);
       });
   }, []);
+
   return (
     <form onSubmit={props.handleSubmit}>
       <div className="form-row">
@@ -32,22 +42,12 @@ const Form1 = props => {
             onBlur={props.handleBlur}
           >
             {apps.map(app => (
-              <Option value={app.group_id}> {app.group_id}</Option>
+              <Option key={app.group_id} value={app.group_id}> {app.group_name}</Option>
             ))}
           </Select>
           {props.errors.group_id && props.touched.group_id && (
             <div className="err">* {props.errors.group_id}</div>
           )}
-
-          {/* <input 
-                                className="form-control"
-                                type="text"
-                                name="group_id"
-                                value={props.values.group_id}
-                                placeholder="ID"
-                                onChange={props.handleChange}
-                                onBlur={props.handleBlur}
-                            /> */}
         </div>
       </div>
 
@@ -95,15 +95,18 @@ const Form1 = props => {
         )}
       </div>
       <div className="form-group">
-        <input
-          className="form-control"
-          type="text"
-          name="timezone"
-          value={props.values.timezone}
-          placeholder="Timezone (Ex: UTC+7)"
-          onChange={props.handleChange}
+        <Select
+          placeholder="Timezone"
+          defaultValue={props.values.timezone}
+          onChange={props.handleChange('timezone')}
           onBlur={props.handleBlur}
-        />
+          >
+          {
+            timezoneList.map( item => 
+              <Option key={item} value={item}>{item}</Option>
+            )
+          }
+        </Select>
         {props.errors.timezone && props.touched.timezone && (
           <div className="err">* {props.errors.timezone}</div>
         )}
@@ -114,7 +117,7 @@ const Form1 = props => {
           type="text"
           name="app_type"
           value={props.values.app_type}
-          placeholder="App Type (Ex: Website)"
+          placeholder="App Type"
           onChange={props.handleChange}
           onBlur={props.handleBlur}
         />

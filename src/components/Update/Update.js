@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'reactn';
 import { Formik } from 'formik';
 import { Modal } from 'antd';
-import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import axios from 'axios';
 import Form1 from '../Form/Form1';
@@ -12,17 +11,16 @@ const UpdateSchema = Yup.object().shape({
   contact_email: Yup.string().email('Invalid email'),
   main_uri: Yup.string().required('URL is required'),
 });
-const Update = (props) => {
+const Update = (props: Object) => {
   const [site, setSite] = useState({});
   const id = props.appId
-  console.log(props)
 
   useEffect(() => {
     axios
       .post('/application/search', { app_id: id })
       .then(res => {
-        console.log(res.data[0]);
-        setSite(res.data[0]);
+        console.log(res.data);
+        setSite(res.data.data[0]);
       })
       .catch(err => {
         console.log(err);
@@ -44,12 +42,14 @@ const Update = (props) => {
             contact_email: values.contact_email,
             main_uri: values.main_uri,
             app_type: values.app_type,
-            ecommerce: values.ecommerce | 0,
+            ecommerce: values.ecommerce ? 1 : 0,
             timezone: values.timezone,
-            site_search: values.site_search | 0,
-            keep_url_fragment: values.keep_url_fragment | 0,
+            site_search: values.site_search ? 1 : 0,
+            keep_url_fragment: values.keep_url_fragment ? 1 : 0,
             activeness: 1,
           };
+
+          console.log(body)
           axios
             .post('/application/update', body)
             .then(res => {
@@ -60,7 +60,8 @@ const Update = (props) => {
               console.log(err);
             });
         }}
-        render={props => <Form1 {...props} />}
+      
+        render={props => props.values.group_id && <Form1 {...props} />}
       />
     </Modal>
   );

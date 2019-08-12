@@ -21,6 +21,12 @@
   align-items: center;
 }
 
+.flex-end {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .color-green {
   color: green;
 }

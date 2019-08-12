@@ -3,7 +3,7 @@ import i18n from 'i18n';
 import { actionConstants, appConstants, resourceConstants } from 'constant';
 
 const { NOTE } = resourceConstants;
-const { READ } = actionConstants;
+// const { READ } = actionConstants;
 const { INTERN } = appConstants;
 const permission = (resource, action) => ({ app: INTERN, resource, action });
 

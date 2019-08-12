@@ -1,4 +1,4 @@
-import React, { useEffect } from 'reactn'
+import React from 'reactn'
 import axios from 'axios';
 import { Modal } from 'antd'
 
@@ -16,7 +16,7 @@ const Delete = (props) => {
         .then (err => console.log(err))
     }
     return (
-      <Modal visible={props.visible} onCancel={props.closeModal} onOk={handleOk}>
+      <Modal visible={props.visible} onCancel={props.closeModal} onOk={handleOk} okText="Yes" cancelText="No">
         Are you sure delete? 
       </Modal>
     )

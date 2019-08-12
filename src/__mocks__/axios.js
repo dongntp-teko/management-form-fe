@@ -2,7 +2,7 @@
 // @flow
 
 export default {
-  get: jest.fn(() => Promise.resolve({ data: {} })),
+  get: jest.fn(() => Promise.resolve({ data: [{app_name: 2222}] })),
   post: jest.fn(() => Promise.resolve({ data: {} })),
   interceptors: {
     response: {
