@@ -5,35 +5,46 @@ import React, { useEffect, useState } from 'reactn';
 import { Table, Divider, Icon, Card, Button, Input } from 'antd';
 
 import axios from 'axios';
+import { applicationService } from 'services/application';
 import Create from '../Create/Create';
 import Update from '../Update/Update';
 import Delete from '../Delete/Delete';
 
 export default (props: Object) => {
-  axios.defaults.baseURL = 'http://0.0.0.0:5000/api/';
+  axios.defaults.baseURL = 'http://103.126.156.66:9000/api/';
   const [apps, setApps] = useState([{}]);
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [stt, setStt] = useState({
     action: '',
     appId: '',
   });
 
+  const getDataFromServer = value => {
+    setLoading(true);
+    // console.log('searchApplication')
+    applicationService
+      .searchApplication({
+        app_name: value,
+      })
+      .then(response => {
+        const { data } = response.data;
+        setApps(data);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .then(() => {
+        setLoading(false);
+      });
+  };
+
   const searchName = async value => {
-    const respone = await axios.post('application/search', { app_name: value });
-    const { data } = respone;
-    setApps(data.data);
+    getDataFromServer(value);
   };
 
   useEffect(() => {
-    axios
-      .get('application/get')
-      .then(res => {
-        console.log(res.data);
-        setApps(res.data.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    getDataFromServer();
   }, []);
 
   const openModal = (value, id) => {
@@ -132,6 +143,7 @@ export default (props: Object) => {
         <h1>Dashboard</h1>
         <div className="mb10 flex-space-between">
           <Input.Search
+            id="input-search"
             placeholder="Search name"
             onSearch={value => searchName(value)}
             style={{ width: 200 }}
@@ -157,6 +169,8 @@ export default (props: Object) => {
           rowKey="app_id"
           dataSource={apps.filter(app => app.activeness)}
           columns={columns}
+          loading={loading}
+          pagination={false}
         />
       </Card>
     </div>

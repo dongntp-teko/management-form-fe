@@ -7,8 +7,10 @@ import Form1 from '../Form/Form1';
 
 const UpdateSchema = Yup.object().shape({
   group_id: Yup.string().required('ID group is required!'),
-  app_name: Yup.string().required('Name is required!'),
-  contact_email: Yup.string().email('Invalid email'),
+  app_name: Yup.string().required('Name is required!')
+  .max(51, "Name have max 50 characters"),
+  contact_email: Yup.string().email('Invalid email')
+  .max(51, "Email have max 50 characters"),
   main_uri: Yup.string().required('URL is required'),
 });
 const Update = (props: Object) => {

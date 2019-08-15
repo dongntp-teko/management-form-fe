@@ -93,7 +93,7 @@ export default (props: Object) => {
 
       <Nav className="d-md-down-none" navbar>
         <NavItem className="px-3">
-          <NavLink href="/">Seller Center</NavLink>
+          <NavLink href="/">Home</NavLink>
         </NavItem>
       </Nav>
       <Nav className="ml-auto" navbar>

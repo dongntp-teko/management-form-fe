@@ -7,6 +7,7 @@ const timezone = "UTC"
 const list = ['-12', '-11', '-10', '-9','-8','-7','-6','-5','-4','-3','-2','-1','+0','+1','+2','+3','+4','+5','+6','+7','+8','+9','+10','+11']
 
 const timezoneList = list.map( item => timezone+item)
+const appTypes = ['1', '2', '3', '4', '5', '0']
 
 
 
@@ -45,7 +46,7 @@ const Form1 = props => {
               <Option key={app.group_id} value={app.group_id}> {app.group_name}</Option>
             ))}
           </Select>
-          {props.errors.group_id && props.touched.group_id && (
+          {props.errors.group_id &&  (
             <div className="err">* {props.errors.group_id}</div>
           )}
         </div>
@@ -94,33 +95,38 @@ const Form1 = props => {
           <div className="err">* {props.errors.main_uri}</div>
         )}
       </div>
-      <div className="form-group">
-        <Select
-          placeholder="Timezone"
-          defaultValue={props.values.timezone}
-          onChange={props.handleChange('timezone')}
-          onBlur={props.handleBlur}
+      <div className="form-group row">
+        <div className="col">
+          <Select
+            placeholder="Timezone"
+            defaultValue={props.values.timezone}
+            onChange={props.handleChange('timezone')}
+            onBlur={props.handleBlur}
           >
-          {
+            {
             timezoneList.map( item => 
               <Option key={item} value={item}>{item}</Option>
             )
           }
-        </Select>
-        {props.errors.timezone && props.touched.timezone && (
+          </Select>
+          {props.errors.timezone && props.touched.timezone && (
           <div className="err">* {props.errors.timezone}</div>
         )}
-      </div>
-      <div className="form-group">
-        <input
-          className="form-control"
-          type="text"
-          name="app_type"
-          value={props.values.app_type}
-          placeholder="App Type"
-          onChange={props.handleChange}
-          onBlur={props.handleBlur}
-        />
+        </div>
+        <div className="col">
+          <Select
+            placeholder="App Type"
+            defaultValue={props.values.app_type}
+            onChange={props.handleChange('app_type')}
+            onBlur={props.handleBlur}
+          >
+            {
+            appTypes.map( item => 
+              <Option key={item} value={item}>{item}</Option>
+            )
+          }
+          </Select>
+        </div>
       </div>
 
       <div className="form-row form-group">

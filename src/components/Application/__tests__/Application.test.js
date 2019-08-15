@@ -1,122 +1,122 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import TestRenderer from 'react-test-renderer';
+import { mountToJson } from 'enzyme-to-json';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+import { Input } from 'antd';
+import { applicationService } from 'services/application';
 import Application from '../Application';
 
+const next = sec => new Promise(resolve => setTimeout(resolve, sec));
+const mock = new MockAdapter(axios);
+
 describe('ThemeList', () => {
-  it('should match snapshot', async done => {
-    const container = TestRenderer.create(<Application />);
-    expect(container.toJSON()).toMatchSnapshot();
-    done();
+  describe('snapshots', () => {
+    beforeEach(async () => {
+      mock.onPost('/application/search').replyOnce(200, {
+        data: [],
+      });
+    });
+    it('should match snapshot', async done => {
+      const container = TestRenderer.create(<Application />);
+      expect(container.toJSON()).toMatchSnapshot();
+      done();
+    });
+
+    it('snapshots enzyme', () => {
+      const tree = mount(<Application />);
+      expect(mountToJson(tree)).toMatchSnapshot();
+    });
   });
 
   describe('test', () => {
-    test('data table should match reponse', async done => {
-      console.log(123);
+    beforeEach(async () => {
+      mock.onPost('/application/search').replyOnce(200, {
+        data: [],
+      });
+    });
+    test('header', async done => {
       const container = mount(<Application />);
-      // await new Promise(resolve => setTimeout(resolve, 0));
-      container.update();
-      const table = container
+      const target = container
         .find('table')
         .find('thead')
         .find('tr')
         .find('th');
 
-      // const tr = table.findByType('tbody').findByType('tr')
-      console.log(table);
+      expect(target.map(item => item.text())).toEqual([
+        'ID',
+        'Group',
+        'Name',
+        'Main Uri',
+        'Timezone',
+        'Type',
+        'ecommerce',
+        'Site search',
+        'Keep Url Fragment',
+        '',
+      ]);
 
-      expect(table.length).toBe(10);
+      done();
+    });
 
-      console.log(table.map(item => item.text()));
+    test('body', async done => {
+      mock.onPost('/application/search').replyOnce(200, {
+        data: [
+          { activeness: 1, app_id: 1 },
+          { activeness: 0, app_id: 2 },
+          { activeness: 1, app_id: 3 },
+        ],
+      });
+
+      const container = mount(<Application />);
+
+      const button = container.find('#input-search').find(Input.Search);
+
+      button.prop('onSearch')('');
+      await next(0);
+      container.update();
+
+      expect(
+        container
+          .find('table')
+          .find('tbody')
+          .find('tr'),
+      ).toHaveLength(2);
+
+      done();
+    });
+
+    test('search input server', async done => {
+      mock.onPost('/application/search').replyOnce(200, {
+        data: [
+          { activeness: 1, app_id: 1 },
+          { activeness: 0, app_id: 2 },
+          { activeness: 1, app_id: 3 },
+        ],
+      });
+      const searchApplication = jest.spyOn(
+        applicationService,
+        'searchApplication',
+      );
+      
+      const container = mount(<Application />);
+
+      searchApplication.mockClear();
+
+      const input = container.find('#input-search').find(Input.Search);
+
+      input.prop('onSearch')('123456');
+      // await next(0);
+      // container.update();
+
+      expect(searchApplication).toBeCalledWith({
+        app_name: '123456',
+      });
+
+      // expect(searchApplication).toBeCalledTimes(1);
+
       done();
     });
   });
-
-  // describe('Functional', () => {
-  //   describe('could handle form fields', () => {
-  //     let findById;
-  //     categoryServices.getMethods = jest.fn(() =>
-  //       Promise.resolve({ data: [{ id: 4 }] }),
-  //     );
-
-  //     // beforeEach(async () => {
-  //     //   axiosMocker.onGet({ data: { content: [{ id: 1 }], totalRecord: 1 } });
-
-  //     //   const container = TestRenderer.create(
-  //     //     <MemoryRouter>
-  //     //       <ThemeList />
-  //     //     </MemoryRouter>,
-  //     //   );
-  //     //   await axiosResponse();
-
-  //     //   findById = id => container.root.findByProps({ id });
-  //     // });
-
-  //     it('onChange Agent', done => {
-  //       const globalState = {
-  //         paymentAgents: [{ id: 1 }, { id: 2 }],
-  //         paymentChannels: [{ id: 2, agentId: 1 }],
-  //         paymentServices: [{ id: 3 }],
-  //       };
-  //       setGlobal({ ...globalState });
-
-  //       findById('channelId').props.onChange(2);
-  //       expect(findById('agentId').props.value).toEqual(undefined);
-
-  //       findById('agentId').props.onChange(1);
-  //       expect(findById('channelId').props.value).toEqual(2);
-  //       findById('agentId').props.onChange(2);
-  //       expect(findById('channelId').props.value).toEqual(undefined);
-
-  //       done();
-  //     });
-
-  //     it('could change active record', async done => {
-  //       const updateTheme = jest.spyOn(themeServices, 'updateTheme');
-  //       axiosMocker.onPut({ data: {} });
-
-  //       const confirmActiveRecord = findById('confirm-active-record-1');
-  //       confirmActiveRecord.props.onConfirm();
-  //       await axiosResponse();
-
-  //       expect(updateTheme).toBeCalledWith({
-  //         benchId: 1,
-  //         isActive: true,
-  //       });
-  //       done();
-  //     });
-  //   });
-
-  //   describe('could handle table change', () => {
-  //     let findByClass;
-  //     categoryServices.getMethods = jest.fn(() =>
-  //       Promise.resolve({ data: [{ id: 4 }] }),
-  //     );
-
-  //     beforeEach(async () => {
-  //       axiosMocker.onGet({ data: { content: [], totalRecord: 12 } });
-
-  //       const container = TestRenderer.create(
-  //         <MemoryRouter>
-  //           <ThemeList />
-  //         </MemoryRouter>,
-  //       );
-  //       await axiosResponse();
-
-  //       findByClass = className => container.root.findByProps({ className });
-  //     });
-
-  //     it('onChange Table', async done => {
-  //       const searchTheme = jest.spyOn(themeServices, 'searchTheme');
-
-  //       axiosMocker.onGet({ data: { content: [], totalRecord: 12 } });
-
-  //       findByClass(' ant-pagination-next').props.onClick();
-  //       await axiosResponse();
-
-  //       expect(searchTheme).toBeCalledWith({ page: 1, size: 10 });
-  //       done();
-  //     });
-  // });
-  // });
 });

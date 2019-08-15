@@ -12,7 +12,7 @@ const routes = [
   {
     path: '/',
     exact: true,
-    name: 'Seller Center',
+    name: 'Home',
     component: DefaultLayout,
   },
   {

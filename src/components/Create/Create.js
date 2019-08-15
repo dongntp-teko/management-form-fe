@@ -8,8 +8,10 @@ import uuid from 'uuid/v4';
 import Form1 from '../Form/Form1';
 
 const CreateSchema = Yup.object().shape({
-  app_name: Yup.string().required('Name is required!'),
-  contact_email: Yup.string().email('Invalid email'),
+  app_name: Yup.string().required('Name is required!')
+  .max(51, "Name have max 50 characters"),
+  contact_email: Yup.string().email('Invalid email')
+  .max(51, "Email have max 50 characters"),
   main_uri: Yup.string().required('URL is required'),
   group_id: Yup.number().required('Group is required'),
 });
@@ -24,7 +26,6 @@ const Create = (props: Object) => {
         initialValues={{
           app_name: '',
           contact_email: '',
-          app_type: '',
           ecommerce: false,
           timezone: 'UTC+7',
           site_search: false,
