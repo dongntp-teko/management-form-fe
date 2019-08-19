@@ -55,6 +55,7 @@ exports[`ThemeList snapshots should match snapshot 1`] = `
       </span>
       <button
         className="ant-btn ant-btn-primary"
+        id="open-modal-create"
         onClick={[Function]}
         type="button"
       >
@@ -85,6 +86,7 @@ exports[`ThemeList snapshots should match snapshot 1`] = `
         </span>
       </button>
     </div>
+    <div />
   </div>
   <div
     className="ant-card ant-card-bordered"
@@ -561,6 +563,7 @@ exports[`ThemeList snapshots snapshots enzyme 1`] = `
           block={false}
           ghost={false}
           htmlType="button"
+          id="open-modal-create"
           loading={false}
           onClick={[Function]}
           type="primary"
@@ -568,6 +571,7 @@ exports[`ThemeList snapshots snapshots enzyme 1`] = `
           <Wave>
             <button
               className="ant-btn ant-btn-primary"
+              id="open-modal-create"
               onClick={[Function]}
               type="button"
             >
@@ -619,6 +623,14 @@ exports[`ThemeList snapshots snapshots enzyme 1`] = `
           </Wave>
         </Button>
       </div>
+      <ShowModal
+        action=""
+        appId=""
+        closeModal={[Function]}
+        visible={false}
+      >
+        <div />
+      </ShowModal>
     </div>
     <Card>
       <div

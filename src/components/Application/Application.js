@@ -6,9 +6,8 @@ import { Table, Divider, Icon, Card, Button, Input } from 'antd';
 
 import axios from 'axios';
 import { applicationService } from 'services/application';
-import Create from '../Create/Create';
-import Update from '../Update/Update';
-import Delete from '../Delete/Delete';
+
+import ShowModal from '../ShowModal/ShowModal'
 
 export default (props: Object) => {
   axios.defaults.baseURL = 'http://103.126.156.66:9000/api/';
@@ -55,7 +54,7 @@ export default (props: Object) => {
   const closeModal = () => {
     setVisible(false);
     setStt({ action: '', appId: '' });
-    props.history.push('/app');
+    if (props.history) props.history.push('/app')
   };
 
   const columns = [
@@ -120,6 +119,7 @@ export default (props: Object) => {
           <div>
             <Button
               type="link"
+              id="open-modal-update"
               onClick={() => openModal('update', record.app_id)}
             >
               Update
@@ -127,6 +127,7 @@ export default (props: Object) => {
             <Divider type="vertical" />
             <Button
               type="link"
+              id="open-modal-delete"
               onClick={() => openModal('delete', record.app_id)}
             >
               Delete
@@ -148,20 +149,13 @@ export default (props: Object) => {
             onSearch={value => searchName(value)}
             style={{ width: 200 }}
           />
-          <Button type="primary" onClick={() => openModal('create')}>
+          <Button id="open-modal-create" type="primary" onClick={() => openModal('create')}>
             <Icon type="plus" /> Create new app
           </Button>
         </div>
 
-        {stt.action === 'create' && (
-          <Create visible={visible} closeModal={closeModal} />
-        )}
-        {stt.action === 'update' && (
-          <Update visible={visible} closeModal={closeModal} appId={stt.appId} />
-        )}
-        {stt.action === 'delete' && (
-          <Delete visible={visible} closeModal={closeModal} appId={stt.appId} />
-        )}
+        <ShowModal visible={visible} closeModal={closeModal} appId={stt.appId} action={stt.action} />
+
       </div>
       <Card>
         <Table
