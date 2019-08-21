@@ -27,7 +27,10 @@ const getPpmUsers = () =>
   requestServices.ppmClient.get('/users').then(response => response.data);
 
 const getCurrentUserId = () => {
-  return Number.parseInt(localStorage.getItem(localStorageConstants.KEY_CURRENT_USER_ID), 10);
+  return Number.parseInt(
+    localStorage.getItem(localStorageConstants.KEY_CURRENT_USER_ID),
+    10,
+  );
 };
 
 export default {

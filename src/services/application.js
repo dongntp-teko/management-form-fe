@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-const searchApplication = request =>
-  axios.post('application/search', {
-    ...request,
-  });
+const searchApplication = (body, headers) =>
+  axios.post('application/search', body, headers);
 
 export const applicationService = {
   searchApplication,

@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'reactn';
+import React, { useState, useEffect, useGlobal } from 'reactn';
 import { Formik } from 'formik';
 import { Modal } from 'antd';
 import * as Yup from 'yup';
 import axios from 'axios';
 import Form1 from '../Form/Form1';
+import {getToken} from '../../services/action'
+import { authConstants } from '../../constant'
 
 const UpdateSchema = Yup.object().shape({
   group_id: Yup.string().required('ID group is required!'),
@@ -16,10 +18,15 @@ const UpdateSchema = Yup.object().shape({
 const Update = (props: Object) => {
   const [site, setSite] = useState({});
   const id = props.appId
+  const auth = useGlobal(authConstants.KEY_CURRENT_USER);
 
   useEffect(() => {
     axios
-      .post('/application/search', { app_id: id })
+      .post('/application/search', { app_id: id },{
+        headers:  {
+          'Authorization': `Bearer ${getToken(auth)}`,
+        },
+      })
       .then(res => {
         console.log(res.data);
         setSite(res.data.data[0]);
@@ -53,7 +60,11 @@ const Update = (props: Object) => {
 
           console.log(body)
           axios
-            .post('/application/update', body)
+            .post('/application/update', body, {
+              headers:  {
+                'Authorization': `Bearer ${getToken(auth)}`,
+              },
+            })
             .then(res => {
               console.log(res.data);
               props.closeModal()  

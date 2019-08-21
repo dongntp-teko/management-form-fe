@@ -1,13 +1,13 @@
 // Created by thanhpd on 6/17/2019
 // @flow
-import React, { useEffect, useState } from 'reactn';
-
+import React, { useEffect, useState, useGlobal } from 'reactn';
 import { Table, Divider, Icon, Card, Button, Input } from 'antd';
-
 import axios from 'axios';
 import { applicationService } from 'services/application';
+import ShowModal from '../ShowModal/ShowModal';
+import {getToken} from '../../services/action'
+import { authConstants } from '../../constant'
 
-import ShowModal from '../ShowModal/ShowModal'
 
 export default (props: Object) => {
   axios.defaults.baseURL = 'http://103.126.156.66:9000/api/';
@@ -19,14 +19,22 @@ export default (props: Object) => {
     appId: '',
   });
 
+  const auth = useGlobal(authConstants.KEY_CURRENT_USER);
+
   const getDataFromServer = value => {
     setLoading(true);
     // console.log('searchApplication')
     applicationService
-      .searchApplication({
-        app_name: value,
-      })
+      .searchApplication(
+        {app_name: value},
+        {
+        headers:  {
+          'Authorization': `Bearer ${getToken(auth)}`,
+        },
+      }
+      )
       .then(response => {
+        console.log(response)
         const { data } = response.data;
         setApps(data);
       })
@@ -44,6 +52,7 @@ export default (props: Object) => {
 
   useEffect(() => {
     getDataFromServer();
+    // getData()
   }, []);
 
   const openModal = (value, id) => {
@@ -54,7 +63,7 @@ export default (props: Object) => {
   const closeModal = () => {
     setVisible(false);
     setStt({ action: '', appId: '' });
-    if (props.history) props.history.push('/app')
+    if (props.history) props.history.push('/app');
   };
 
   const columns = [
@@ -149,13 +158,21 @@ export default (props: Object) => {
             onSearch={value => searchName(value)}
             style={{ width: 200 }}
           />
-          <Button id="open-modal-create" type="primary" onClick={() => openModal('create')}>
+          <Button
+            id="open-modal-create"
+            type="primary"
+            onClick={() => openModal('create')}
+          >
             <Icon type="plus" /> Create new app
           </Button>
         </div>
 
-        <ShowModal visible={visible} closeModal={closeModal} appId={stt.appId} action={stt.action} />
-
+        <ShowModal
+          visible={visible}
+          closeModal={closeModal}
+          appId={stt.appId}
+          action={stt.action}
+        />
       </div>
       <Card>
         <Table

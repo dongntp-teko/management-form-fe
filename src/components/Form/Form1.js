@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'reactn';
+import React, { useEffect, useState, useGlobal } from 'reactn';
 import { Select } from 'antd';
 import axios from 'axios';
 import CheckBox from './CheckBox';
+import {getToken} from '../../services/action'
+import { authConstants } from '../../constant'
 
 const timezone = "UTC"
 const list = ['-12', '-11', '-10', '-9','-8','-7','-6','-5','-4','-3','-2','-1','+0','+1','+2','+3','+4','+5','+6','+7','+8','+9','+10','+11']
@@ -13,6 +15,7 @@ const appTypes = ['1', '2', '3', '4', '5', '0']
 
 const Form1 = props => {
   const { Option } = Select;
+  const auth = useGlobal(authConstants.KEY_CURRENT_USER);
 
   // console.log(getTimezone)
 
@@ -22,7 +25,11 @@ const Form1 = props => {
 
   useEffect(() => {
     axios
-      .get('/app_group/get')
+      .get('/app_group/get',{
+        headers:  {
+          'Authorization': `Bearer ${getToken(auth)}`,
+        },
+      })
       .then(res => {
         console.log(res.data);
         setApps(res.data.data);
@@ -76,9 +83,6 @@ const Form1 = props => {
           onChange={props.handleChange}
           onBlur={props.handleBlur}
         />
-        {props.errors.contact_email && props.touched.contact_email && (
-          <div className="err">* {props.errors.contact_email}</div>
-        )}
       </div>
 
       <div className="form-group">
@@ -91,7 +95,7 @@ const Form1 = props => {
           onChange={props.handleChange}
           onBlur={props.handleBlur}
         />
-        {props.errors.main_uri && props.touched.main_uri && (
+        {props.errors.main_uri && (
           <div className="err">* {props.errors.main_uri}</div>
         )}
       </div>
@@ -109,9 +113,6 @@ const Form1 = props => {
             )
           }
           </Select>
-          {props.errors.timezone && props.touched.timezone && (
-          <div className="err">* {props.errors.timezone}</div>
-        )}
         </div>
         <div className="col">
           <Select
