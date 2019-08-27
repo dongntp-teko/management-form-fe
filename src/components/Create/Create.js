@@ -1,29 +1,25 @@
 // @flow
-import React, {useGlobal} from 'reactn';
+import React from 'reactn';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import axios from 'axios';
 import { Modal } from 'antd';
 import uuid from 'uuid/v4';
+import { requestServices } from 'services';
 import Form1 from '../Form/Form1';
-import {getToken} from '../../services/action'
-import { authConstants } from '../../constant'
-
 
 const CreateSchema = Yup.object().shape({
-  app_name: Yup.string().required('Name is required!')
-  .max(51, "Name have max 50 characters"),
-  contact_email: Yup.string().email('Invalid email')
-  .max(51, "Email have max 50 characters"),
+  app_name: Yup.string()
+    .required('Name is required!')
+    .max(51, 'Name have max 50 characters'),
+  contact_email: Yup.string()
+    .email('Invalid email')
+    .max(51, 'Email have max 50 characters'),
   main_uri: Yup.string().required('URL is required'),
   group_id: Yup.number().required('Group is required'),
 });
 
-
 const Create = (props: Object) => {
   const { visible, closeModal } = props;
-  const auth = useGlobal(authConstants.KEY_CURRENT_USER);
-  
 
   return (
     <Modal footer={null} visible={visible} onCancel={closeModal}>
@@ -53,14 +49,8 @@ const Create = (props: Object) => {
             activeness: 1,
           };
           console.log(site);
-          axios
-            .post('/application/create', site,
-            {
-              headers:  {
-                'Authorization': `Bearer ${getToken(auth)}`,
-              },
-            }
-            )
+          requestServices.apiClient
+            .post('/application/create', site)
             .then(res => {
               console.log(res);
               // props.history.push('/');

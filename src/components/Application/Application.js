@@ -1,16 +1,11 @@
 // Created by thanhpd on 6/17/2019
 // @flow
-import React, { useEffect, useState, useGlobal } from 'reactn';
+import React, { useEffect, useState } from 'reactn';
 import { Table, Divider, Icon, Card, Button, Input } from 'antd';
-import axios from 'axios';
 import { applicationService } from 'services/application';
 import ShowModal from '../ShowModal/ShowModal';
-import {getToken} from '../../services/action'
-import { authConstants } from '../../constant'
-
 
 export default (props: Object) => {
-  axios.defaults.baseURL = 'http://103.126.156.66:9000/api/';
   const [apps, setApps] = useState([{}]);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -18,23 +13,13 @@ export default (props: Object) => {
     action: '',
     appId: '',
   });
-
-  const auth = useGlobal(authConstants.KEY_CURRENT_USER);
-
   const getDataFromServer = value => {
     setLoading(true);
     // console.log('searchApplication')
     applicationService
-      .searchApplication(
-        {app_name: value},
-        {
-        headers:  {
-          'Authorization': `Bearer ${getToken(auth)}`,
-        },
-      }
-      )
+      .searchApplication({ app_name: value })
       .then(response => {
-        console.log(response)
+        console.log(response);
         const { data } = response.data;
         setApps(data);
       })
@@ -51,7 +36,7 @@ export default (props: Object) => {
   };
 
   useEffect(() => {
-    getDataFromServer();
+    getDataFromServer('');
     // getData()
   }, []);
 

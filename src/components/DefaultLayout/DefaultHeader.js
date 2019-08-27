@@ -98,7 +98,7 @@ export default (props: Object) => {
       </Nav>
       <Nav className="ml-auto" navbar>
         <AppHeaderDropdown direction="down">
-          <DropdownToggle nav>
+          {/* <DropdownToggle nav>
             <Region language={language} />
           </DropdownToggle>
           <DropdownMenu>
@@ -107,7 +107,7 @@ export default (props: Object) => {
                 <Region language={el} />
               </DropdownItem>
             ))}
-          </DropdownMenu>
+          </DropdownMenu> */}
         </AppHeaderDropdown>
         <AppHeaderDropdown direction="down">
           <DropdownToggle nav>

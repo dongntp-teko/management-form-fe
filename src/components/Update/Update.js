@@ -1,32 +1,27 @@
-import React, { useState, useEffect, useGlobal } from 'reactn';
+import React, { useState, useEffect } from 'reactn';
 import { Formik } from 'formik';
 import { Modal } from 'antd';
 import * as Yup from 'yup';
-import axios from 'axios';
+import { requestServices } from 'services';
 import Form1 from '../Form/Form1';
-import {getToken} from '../../services/action'
-import { authConstants } from '../../constant'
 
 const UpdateSchema = Yup.object().shape({
   group_id: Yup.string().required('ID group is required!'),
-  app_name: Yup.string().required('Name is required!')
-  .max(51, "Name have max 50 characters"),
-  contact_email: Yup.string().email('Invalid email')
-  .max(51, "Email have max 50 characters"),
+  app_name: Yup.string()
+    .required('Name is required!')
+    .max(51, 'Name have max 50 characters'),
+  contact_email: Yup.string()
+    .email('Invalid email')
+    .max(51, 'Email have max 50 characters'),
   main_uri: Yup.string().required('URL is required'),
 });
 const Update = (props: Object) => {
   const [site, setSite] = useState({});
-  const id = props.appId
-  const auth = useGlobal(authConstants.KEY_CURRENT_USER);
+  const id = props.appId;
 
   useEffect(() => {
-    axios
-      .post('/application/search', { app_id: id },{
-        headers:  {
-          'Authorization': `Bearer ${getToken(auth)}`,
-        },
-      })
+    requestServices.apiClient
+      .post('/application/search', { app_id: id })
       .then(res => {
         console.log(res.data);
         setSite(res.data.data[0]);
@@ -43,7 +38,7 @@ const Update = (props: Object) => {
         enableReinitialize
         initialValues={site}
         validationSchema={UpdateSchema}
-        onSubmit={(values) => {
+        onSubmit={values => {
           const body = {
             app_id: values.app_id,
             group_id: values.group_id,
@@ -58,22 +53,17 @@ const Update = (props: Object) => {
             activeness: 1,
           };
 
-          console.log(body)
-          axios
-            .post('/application/update', body, {
-              headers:  {
-                'Authorization': `Bearer ${getToken(auth)}`,
-              },
-            })
+          console.log(body);
+          requestServices.apiClient
+            .post('/application/update', body)
             .then(res => {
               console.log(res.data);
-              props.closeModal()  
+              props.closeModal();
             })
             .catch(err => {
               console.log(err);
             });
         }}
-      
         render={props => props.values.group_id && <Form1 {...props} />}
       />
     </Modal>
