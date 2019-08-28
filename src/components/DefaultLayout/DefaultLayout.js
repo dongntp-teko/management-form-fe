@@ -42,10 +42,9 @@ function DefaultLayout(props: Object) {
   };
   const language = localizationHelper.getCurrentLanguage();
 
-
   const { filteredNavigation } = useAuthorizationNavigation(navigation);
   const { filteredRoutes } = useAuthorizationRoute(routes);
-  
+
   return (
     <div className="app">
       <AppHeader fixed>
@@ -67,7 +66,7 @@ function DefaultLayout(props: Object) {
           <AppSidebarFooter />
           <AppSidebarMinimizer />
         </AppSidebar>
-        <main className="main">
+        <main className="main" style={{ marginTop: 0 }}>
           <div className="header-divider" />
           <AppBreadcrumb appRoutes={routes} />
           <Container fluid>
