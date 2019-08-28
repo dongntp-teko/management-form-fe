@@ -20,7 +20,7 @@ export default {
     },
     {
       title: true,
-      name: 'Quản lý ABC',
+      name: 'Quản lý',
       wrapper: {
         element: '',
         attributes: {},

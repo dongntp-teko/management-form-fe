@@ -1,6 +1,6 @@
 import React from 'reactn';
 
-const CheckBox = function({ value1 }) {
+const CheckBox = ({ value1 }) => {
   return (
     <div className="form-check form-check-inline col">
       <input
