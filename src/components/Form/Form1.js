@@ -1,22 +1,41 @@
 import React, { useEffect, useState, useGlobal } from 'reactn';
 import { Select } from 'antd';
-import axios from 'axios';
+import { requestServices } from 'services';
 import CheckBox from './CheckBox';
-import {getToken} from '../../services/action'
-import { authConstants } from '../../constant'
 
-const timezone = "UTC"
-const list = ['-12', '-11', '-10', '-9','-8','-7','-6','-5','-4','-3','-2','-1','+0','+1','+2','+3','+4','+5','+6','+7','+8','+9','+10','+11']
+const timezone = 'UTC';
+const list = [
+  '-12',
+  '-11',
+  '-10',
+  '-9',
+  '-8',
+  '-7',
+  '-6',
+  '-5',
+  '-4',
+  '-3',
+  '-2',
+  '-1',
+  '+0',
+  '+1',
+  '+2',
+  '+3',
+  '+4',
+  '+5',
+  '+6',
+  '+7',
+  '+8',
+  '+9',
+  '+10',
+  '+11',
+];
 
-const timezoneList = list.map( item => timezone+item)
-const appTypes = ['1', '2', '3', '4', '5', '0']
-
-
+const timezoneList = list.map(item => timezone + item);
+const appTypes = ['1', '2', '3', '4', '5', '0'];
 
 const Form1 = props => {
   const { Option } = Select;
-  const auth = useGlobal(authConstants.KEY_CURRENT_USER);
-
   // console.log(getTimezone)
 
   console.log(props);
@@ -24,12 +43,8 @@ const Form1 = props => {
   const [apps, setApps] = useState([]);
 
   useEffect(() => {
-    axios
-      .get('/app_group/get',{
-        headers:  {
-          'Authorization': `Bearer ${getToken(auth)}`,
-        },
-      })
+    requestServices.apiClient
+      .get('/app_group/get')
       .then(res => {
         console.log(res.data);
         setApps(res.data.data);
@@ -50,10 +65,13 @@ const Form1 = props => {
             onBlur={props.handleBlur}
           >
             {apps.map(app => (
-              <Option key={app.group_id} value={app.group_id}> {app.group_name}</Option>
+              <Option key={app.group_id} value={app.group_id}>
+                {' '}
+                {app.group_name}
+              </Option>
             ))}
           </Select>
-          {props.errors.group_id &&  (
+          {props.errors.group_id && (
             <div className="err">* {props.errors.group_id}</div>
           )}
         </div>
@@ -107,11 +125,11 @@ const Form1 = props => {
             onChange={props.handleChange('timezone')}
             onBlur={props.handleBlur}
           >
-            {
-            timezoneList.map( item => 
-              <Option key={item} value={item}>{item}</Option>
-            )
-          }
+            {timezoneList.map(item => (
+              <Option key={item} value={item}>
+                {item}
+              </Option>
+            ))}
           </Select>
         </div>
         <div className="col">
@@ -121,11 +139,11 @@ const Form1 = props => {
             onChange={props.handleChange('app_type')}
             onBlur={props.handleBlur}
           >
-            {
-            appTypes.map( item => 
-              <Option key={item} value={item}>{item}</Option>
-            )
-          }
+            {appTypes.map(item => (
+              <Option key={item} value={item}>
+                {item}
+              </Option>
+            ))}
           </Select>
         </div>
       </div>
