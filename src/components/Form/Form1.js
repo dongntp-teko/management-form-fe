@@ -59,7 +59,7 @@ const Form1 = props => {
       <div className="form-row">
         <div className="col-sm-6 form-group">
           <Select
-            placeholder="ID Group"
+            placeholder="Group"
             defaultValue={props.values.group_id}
             onChange={props.handleChange('group_id')}
             onBlur={props.handleBlur}

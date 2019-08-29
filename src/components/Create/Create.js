@@ -23,7 +23,7 @@ const Create = (props: Object) => {
 
   return (
     <Modal footer={null} visible={visible} onCancel={closeModal}>
-      <h3>Created</h3>
+      <h3>Create</h3>
       <Formik
         initialValues={{
           app_name: '',

@@ -2,16 +2,16 @@ import React from 'react';
 import { mount } from 'enzyme';
 import TestRenderer from 'react-test-renderer';
 import { mountToJson } from 'enzyme-to-json';
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { Input, Button } from 'antd';
 import { applicationService } from 'services/application';
+import { requestServices } from 'services';
 import Application from '../Application';
 
 const next = sec => new Promise(resolve => setTimeout(resolve, sec));
-const mock = new MockAdapter(axios);
+const mock = new MockAdapter(requestServices.apiClient);
 
-describe('ThemeList', () => {
+describe('Application', () => {
   describe('snapshots', () => {
     beforeEach(async () => {
       mock.onPost('/application/search').replyOnce(200, {
@@ -99,7 +99,7 @@ describe('ThemeList', () => {
         applicationService,
         'searchApplication',
       );
-      
+
       const container = mount(<Application />);
 
       // searchApplication.mockClear();
@@ -119,40 +119,44 @@ describe('ThemeList', () => {
       done();
     });
 
-    test("open modal create", async done => {
-      
+    test('open modal create', async done => {
       const container = mount(<Application />);
-      
-      container.find('#open-modal-create').find(Button).simulate('click');
+
+      container
+        .find('#open-modal-create')
+        .find(Button)
+        .simulate('click');
 
       await next(0);
 
-      container.update()
+      container.update();
 
-      expect(container.find('ShowModal').prop('action')).toEqual('create')
-      expect(container.find('ShowModal').prop('visible')).toEqual(true)
+      expect(container.find('ShowModal').prop('action')).toEqual('create');
+      expect(container.find('ShowModal').prop('visible')).toEqual(true);
 
       done();
-    })
+    });
 
-    test("close modal", async done => {
-      
+    test('close modal', async done => {
       const container = mount(<Application />);
 
-      container.find('#open-modal-create').find(Button).simulate('click');
+      container
+        .find('#open-modal-create')
+        .find(Button)
+        .simulate('click');
 
-      container.find('ShowModal').prop('closeModal')()
+      container.find('ShowModal').prop('closeModal')();
 
       await next(0);
 
-      container.update()
+      container.update();
 
-      expect(container.find('ShowModal').prop('visible')).toEqual(false)
+      expect(container.find('ShowModal').prop('visible')).toEqual(false);
 
       done();
-    })
+    });
 
-    test("open update modal", async done => {
+    test('open update modal', async done => {
       mock.onPost('/application/search').replyOnce(200, {
         data: [
           { activeness: 1, app_id: 1 },
@@ -160,7 +164,7 @@ describe('ThemeList', () => {
           { activeness: 1, app_id: 3 },
         ],
       });
-      
+
       const container = mount(<Application />);
 
       const input = container.find('#input-search').find(Input.Search);
@@ -169,27 +173,28 @@ describe('ThemeList', () => {
 
       await next(0);
 
-      container.update()
+      container.update();
 
       const td = container
-      .find('table')
-      .find('tbody')
-      .find('tr')
-      .first()
-      .find('td')
+        .find('table')
+        .find('tbody')
+        .find('tr')
+        .first()
+        .find('td');
 
-      td.find('#open-modal-update').find(Button).simulate('click')
+      td.find('#open-modal-update')
+        .find(Button)
+        .simulate('click');
 
       await next(0);
 
-      container.update()
+      container.update();
 
       expect(container.find('ShowModal').prop('action')).toEqual('update');
-      expect(container.find('ShowModal').prop('visible')).toEqual(true)
+      expect(container.find('ShowModal').prop('visible')).toEqual(true);
 
-      done()
-      
-    })
+      done();
+    });
 
     test('open modal delete', async done => {
       mock.onPost('/application/search').replyOnce(200, {
@@ -199,7 +204,7 @@ describe('ThemeList', () => {
           { activeness: 1, app_id: 3 },
         ],
       });
-      
+
       const container = mount(<Application />);
 
       const input = container.find('#input-search').find(Input.Search);
@@ -208,36 +213,49 @@ describe('ThemeList', () => {
 
       await next(0);
 
-      container.update()
+      container.update();
 
       const td = container
-      .find('table')
-      .find('tbody')
-      .find('tr')
-      .first()
-      .find('td')
+        .find('table')
+        .find('tbody')
+        .find('tr')
+        .first()
+        .find('td');
 
-      td.find('#open-modal-delete').find(Button).simulate('click')
+      td.find('#open-modal-delete')
+        .find(Button)
+        .simulate('click');
 
       await next(0);
 
-      container.update()
+      container.update();
 
-      expect(container.find('ShowModal').prop('action')).toEqual('delete')
-      expect(container.find('ShowModal').prop('visible')).toEqual(true)
+      expect(container.find('ShowModal').prop('action')).toEqual('delete');
+      expect(container.find('ShowModal').prop('visible')).toEqual(true);
 
-      done()
-      
-    })
+      done();
+    });
 
     test('icon', async done => {
       mock.onPost('/application/search').replyOnce(200, {
         data: [
-          { activeness: 1, app_id: 1, ecommerce: 1, site_search: 0, keep_url_fragment: 1 },
-          { activeness: 1, app_id: 3, ecommerce: 0, site_search: 1, keep_url_fragment: 0 },
+          {
+            activeness: 1,
+            app_id: 1,
+            ecommerce: 1,
+            site_search: 0,
+            keep_url_fragment: 1,
+          },
+          {
+            activeness: 1,
+            app_id: 3,
+            ecommerce: 0,
+            site_search: 1,
+            keep_url_fragment: 0,
+          },
         ],
       });
-      
+
       const container = mount(<Application />);
 
       const input = container.find('#input-search').find(Input.Search);
@@ -246,35 +264,60 @@ describe('ThemeList', () => {
 
       await next(0);
 
-      container.update()
+      container.update();
 
       const td1 = container
-      .find('table')
-      .find('tbody')
-      .find('tr')
-      .first()
-      .find('td')
+        .find('table')
+        .find('tbody')
+        .find('tr')
+        .first()
+        .find('td');
 
       const td2 = container
-      .find('table')
-      .find('tbody')
-      .find('tr')
-      .at(1)
-      .find('td')
+        .find('table')
+        .find('tbody')
+        .find('tr')
+        .at(1)
+        .find('td');
 
-      expect(td1.find("Icon").first().prop('type')).toEqual('check')
-      expect(td1.find("Icon").at(1).prop('type')).toEqual('close')
-      expect(td1.find("Icon").at(2).prop('type')).toEqual('check')
-      expect(td2.find("Icon").first().prop('type')).toEqual('close')
-      expect(td2.find("Icon").at(1).prop('type')).toEqual('check')
-      expect(td2.find("Icon").at(2).prop('type')).toEqual('close')
+      expect(
+        td1
+          .find('Icon')
+          .first()
+          .prop('type'),
+      ).toEqual('check');
+      expect(
+        td1
+          .find('Icon')
+          .at(1)
+          .prop('type'),
+      ).toEqual('close');
+      expect(
+        td1
+          .find('Icon')
+          .at(2)
+          .prop('type'),
+      ).toEqual('check');
+      expect(
+        td2
+          .find('Icon')
+          .first()
+          .prop('type'),
+      ).toEqual('close');
+      expect(
+        td2
+          .find('Icon')
+          .at(1)
+          .prop('type'),
+      ).toEqual('check');
+      expect(
+        td2
+          .find('Icon')
+          .at(2)
+          .prop('type'),
+      ).toEqual('close');
 
-      done()
-    })
-
-    
-   
+      done();
+    });
   });
-
- 
 });

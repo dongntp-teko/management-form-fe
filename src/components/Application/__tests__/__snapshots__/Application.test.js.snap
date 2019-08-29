@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ThemeList snapshots should match snapshot 1`] = `
+exports[`Application snapshots should match snapshot 1`] = `
 <div>
   <div>
     <h1>
@@ -454,7 +454,7 @@ exports[`ThemeList snapshots should match snapshot 1`] = `
 </div>
 `;
 
-exports[`ThemeList snapshots snapshots enzyme 1`] = `
+exports[`Application snapshots snapshots enzyme 1`] = `
 <_default>
   <div>
     <div>
